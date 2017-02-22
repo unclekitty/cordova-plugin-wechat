@@ -262,6 +262,7 @@ public class Wechat extends CordovaPlugin {
         PayReq req = new PayReq();
 
         try {
+             /*
             req.appId = getAppId();
             req.partnerId = params.has("mch_id") ? params.getString("mch_id") : params.getString("partnerid");
             req.prepayId = params.has("prepay_id") ? params.getString("prepay_id") : params.getString("prepayid");
@@ -269,6 +270,15 @@ public class Wechat extends CordovaPlugin {
             req.timeStamp = params.getString("timestamp");
             req.sign = params.getString("sign");
             req.packageValue = "Sign=WXPay";
+            */
+            req.appId			= params.getString("appid");
+            req.partnerId		= params.getString("partnerid");
+            req.prepayId		= params.getString("prepayid");
+            req.nonceStr		= params.getString("noncestr");
+            req.timeStamp		= params.getString("timestamp");
+            req.packageValue	= params.getString("package");
+            req.sign			= params.getString("sign");
+            req.extData			= "app data"; // optional
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
 
@@ -276,6 +286,9 @@ public class Wechat extends CordovaPlugin {
             return true;
         }
 
+        // 调起微信弹出普通错误，微信错误码-1， 发起请求之前加了注册到微信，解决此问题
+        String appId = getAppId();
+        api.registerApp(appId);
         if (api.sendReq(req)) {
             Log.i(TAG, "Payment request has been sent successfully.");
 
